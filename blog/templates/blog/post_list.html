@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TONPL SysAdmin Blog</title>
+
+    <!-- Highlight.js for code syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        header {
+            background-color: #3b3f42;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        /* Container Layout */
+        .container {
+            display: flex;
+            margin: 20px;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        /* Sidebar (Topics) */
+        .sidebar {
+            flex: 1;
+            max-width: 300px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #444;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar ul li a {
+            text-decoration: none;
+            color: #444;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .sidebar ul li a:hover {
+            color: #555;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 3;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .post {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .post h2 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .post p {
+            font-size: 1rem;
+            color: #777;
+            margin-bottom: 10px;
+        }
+
+        .post .read-more {
+            font-weight: bold;
+            color: #3b3f42;
+            text-decoration: none;
+        }
+
+        .post .read-more:hover {
+            text-decoration: underline;
+        }
+
+        /* Search Form */
+        .search-form {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .search-form input {
+            flex: 1;
+            padding: 10px;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .search-form button {
+            padding: 10px 20px;
+            background-color: #3b3f42;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .search-form button:hover {
+            background-color: #444;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .sidebar {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .main-content {
+                width: 100%;
+            }
+
+            .search-form {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .search-form input,
+            .search-form button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+        .code-font {
+            font-family: "Courier New", Courier, monospace;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 class="code-font"><i class="fa-solid fa-terminal"></i> INFRASTRUCTURE BLOG</h1>
+    </header>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="topic-section">
+                <h3>AIX/IBM Topics</h3>
+                <ul>
+                    {% for post in latest_aix_posts %}
+                        <li>
+                            <a href="{% url 'aix_post_detail' post.id %}">{{ post.title }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="topic-section">
+                <h3>Linux Topics</h3>
+                <ul>
+                    {% for post in latest_redhat_posts %}
+                        <li>
+                            <a href="{% url 'redhat_post_detail' post.id %}">{{ post.title }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="topic-section">
+                <h3>VMware Topics</h3>
+                <ul>
+                    {% for post in latest_vmware_posts %}
+                        <li>
+                            <a href="{% url 'vmware_post_detail' post.id %}">{{ post.title }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Search Form -->
+            <div class="search-form">
+                <form method="GET" action="{% url 'post_list' %}">
+                    <input type="text" name="q" placeholder="Search blog..." value="{{ query|default:'' }}">
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+
+            <hr>
+
+            {% if aix_posts or redhat_posts or vmware_post %}
+                {% for post in aix_posts %}
+                    <div class="post">
+                        <h2>{{ post.title }}</h2>
+                        <p>By <strong>{{ post.author }}</strong> on {{ post.created_at|date:"F d, Y" }}</p>
+                        <div>{{ post.content|safe|truncatewords_html:20 }}</div>
+                        <a class="read-more" href="{% url 'aix_post_detail' post.id %}">Read More &raquo;</a>
+                    </div>
+                {% endfor %}
+
+                {% for post in redhat_posts %}
+                    <div class="post">
+                        <h2>{{ post.title }}</h2>
+                        <p>By <strong>{{ post.author }}</strong> on {{ post.created_at|date:"F d, Y" }}</p>
+                        <div>{{ post.content|safe|truncatewords_html:20 }}</div>
+                        <a class="read-more" href="{% url 'redhat_post_detail' post.id %}">Read More &raquo;</a>
+                    </div>
+                {% endfor %}
+
+                {% for post in vmware_post %}
+                    <div class="post">
+                        <h2>{{ post.title }}</h2>
+                        <p>By <strong>{{ post.author }}</strong> on {{ post.created_at|date:"F d, Y" }}</p>
+                        <div>{{ post.content|safe|truncatewords_html:20 }}</div>
+                        <a class="read-more" href="{% url 'vmware_post_detail' post.id %}">Read More &raquo;</a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No matching blog posts found.</p>
+            {% endif %}
+                
+        </div>
+    </div>
+
+</body>
+</html>
